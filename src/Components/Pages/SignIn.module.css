@@ -50,3 +50,7 @@ button:hover {
   font-weight: 600;
   cursor: pointer;
 }
+
+.wrong-password {
+  color: red;
+}

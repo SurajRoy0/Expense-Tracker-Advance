@@ -3,6 +3,8 @@ import styles from "./SignIn.module.css";
 import axios from "axios";
 import AuthContext from "../../Store/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -41,22 +43,32 @@ const SignIn = () => {
         }
       );
       authCtx.isLogin(res.data.idToken);
+      toast.success("Login Successfull", {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "colored",
+      });
       setEmail("");
       setPassword("");
-      console.log(res);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Login Failed! Please Try Again", {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "colored",
+      });
     }
   };
 
   return (
     <div className={styles.container}>
+      <ToastContainer />
       <h2 className={styles.title}>Sign In</h2>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
-          <label>Email:</label>
+          <label className={styles.label}>Email:</label>
           <input
+            className={styles.input}
             type="email"
             value={email}
             onChange={handleEmailChange}
@@ -64,8 +76,9 @@ const SignIn = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label>Password:</label>
+          <label className={styles.label}>Password:</label>
           <input
+            className={styles.input}
             type="password"
             value={password}
             onChange={handlePasswordChange}
@@ -78,7 +91,9 @@ const SignIn = () => {
           )}
         </div>
 
-        <button type="submit">Sign In</button>
+        <button className={styles.button} type="submit">
+          Sign In
+        </button>
       </form>
       <p onClick={goToSignUpHandler} className={styles["change-auth"]}>
         Don't have any account? Create New Account

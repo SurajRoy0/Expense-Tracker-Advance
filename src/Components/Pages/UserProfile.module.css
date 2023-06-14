@@ -1,24 +1,11 @@
 .container {
-  max-width: 300px;
-  margin: 20vh auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  margin: 50px 200px;
   text-align: center;
-}
-.title {
-  margin: 0 auto 20px auto;
-}
-.form {
-  display: flex;
-  flex-direction: column;
 }
 
 .formGroup {
-  display: flex;
-  flex-direction: column;
   text-align: start;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .label {
@@ -43,14 +30,4 @@
 
 .button:hover {
   background-color: #0a2685;
-}
-
-.change-auth {
-  color: blueviolet;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.wrong-password {
-  color: red;
 }

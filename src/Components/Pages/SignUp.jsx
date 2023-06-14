@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styles from "./SignUp.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -21,10 +23,12 @@ const SignUp = () => {
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+    setIsPasswordValid(false);
   };
 
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
+    setIsConfirmPassword(false);
   };
 
   const handleSubmit = async (e) => {
@@ -36,7 +40,6 @@ const SignUp = () => {
 
     if (password !== confirmPassword) {
       setIsConfirmPassword(true);
-      setIsPasswordValid(false);
       return;
     }
     try {
@@ -51,19 +54,29 @@ const SignUp = () => {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      console.log(res);
+      toast.success("Account Created Successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "colored",
+      });
     } catch (error) {
-      console.log(error);
+      toast.error("Failed! Please Try Again", {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "colored",
+      });
     }
   };
 
   return (
     <div className={styles.container}>
+      <ToastContainer />
       <h2 className={styles.title}>Sign Up</h2>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
-          <label>Email:</label>
+          <label className={styles.label}>Email:</label>
           <input
+            className={styles.input}
             type="email"
             value={email}
             onChange={handleEmailChange}
@@ -71,8 +84,9 @@ const SignUp = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label>Password:</label>
+          <label className={styles.label}>Password:</label>
           <input
+            className={styles.input}
             type="password"
             value={password}
             onChange={handlePasswordChange}
@@ -80,8 +94,9 @@ const SignUp = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label>Confirm Password:</label>
+          <label className={styles.label}>Confirm Password:</label>
           <input
+            className={styles.input}
             type="password"
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
@@ -98,7 +113,9 @@ const SignUp = () => {
             </p>
           )}
         </div>
-        <button type="submit">Sign Up</button>
+        <button className={styles.button} type="submit">
+          Sign Up
+        </button>
       </form>
       <p onClick={goToSignInHandler} className={styles["change-auth"]}>
         Have an account? Sign In...

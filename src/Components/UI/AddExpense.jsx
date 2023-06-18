@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./AddExpense.module.css";
+import axios from "axios";
+import ItemContext from "../../Store/ItemContext";
 
-const AddExpense = (props) => {
+const AddExpense = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
+  const itemCtx = useContext(ItemContext);
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -18,15 +21,13 @@ const AddExpense = (props) => {
     setAmount(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    props.addItemHandler({
-      id: Math.floor(Math.random() * 999999999),
+    itemCtx.addItems({
       amount: amount,
       description: description,
       category: category,
     });
-    // Reset form fields
     setDescription("");
     setCategory("");
     setAmount("");

@@ -45,6 +45,7 @@ const SignIn = () => {
         }
       );
       authCtx.isLogin(res.data.idToken);
+      authCtx.addUserEmail(res.data.email);
       setLoader(false);
       toast.success("Login Successfull", {
         position: "top-center",

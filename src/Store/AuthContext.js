@@ -9,6 +9,8 @@ const AuthContext = React.createContext({
     addUserName: (Name) => { },
     isVerified: false,
     verificationHandler: (bool) => { },
+    userEmail: '',
+    addUserEmail: (email) => { }
 });
 
 export const AuthContextProvider = (props) => {
@@ -17,6 +19,7 @@ export const AuthContextProvider = (props) => {
     const [token, setToken] = useState(Authdata.token || null);
     const [userName, setUserName] = useState(Authdata.userName || null);
     const [isVerified, setIsVerified] = useState(Authdata.isVerified || false);
+    const [userEmail, setUserEmail] = useState('')
 
     const isLoggedIn = !!token;
 
@@ -42,6 +45,8 @@ export const AuthContextProvider = (props) => {
     const userNameHandler = (name) => setUserName(name);
     const verificationHandler = (bool) => setIsVerified(bool);
 
+    const addUserEmailHandler = email => setUserEmail(email);
+
     const contextValue = {
         token: token,
         isLoggedIn: isLoggedIn,
@@ -51,6 +56,8 @@ export const AuthContextProvider = (props) => {
         addUserName: userNameHandler,
         isVerified: isVerified,
         verificationHandler: verificationHandler,
+        userEmail: userEmail,
+        addUserEmail: addUserEmailHandler,
     };
 
     return (

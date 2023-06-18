@@ -1,8 +1,9 @@
 .container {
-  display: flex;
-  justify-content: space-between;
+  text-align: center;
 }
 
-.update-profile {
-  color: blueviolet;
-}
+/* .expense-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+} */

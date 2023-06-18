@@ -44,7 +44,7 @@ const SignIn = () => {
           returnSecureToken: true,
         }
       );
-      authCtx.isLogin(res.data);
+      authCtx.isLogin(res.data.idToken);
       setLoader(false);
       toast.success("Login Successfull", {
         position: "top-center",

@@ -6,7 +6,7 @@ import styles from "./UserProfile.module.css";
 import axios from "axios";
 import AuthContext from "../../Store/AuthContext";
 
-const UserProfile = () => {
+const UserProfile = (props) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
 
@@ -24,8 +24,14 @@ const UserProfile = () => {
         }
       );
       // Access the response data from res.data
+      if (!res.data.users[0].displayName && !res.data.users[0].photoUrl) {
+        setName("");
+        setImage("");
+        return;
+      }
       setName(res.data.users[0].displayName);
       setImage(res.data.users[0].photoUrl);
+      authCtx.addUserName(res.data.users[0].displayName);
     } catch (error) {
       console.error(error);
       toast.error("Failed! Reload Again", {
@@ -37,8 +43,9 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    getDataHandler();
+    authCtx.isLoggedIn && getDataHandler();
   }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -68,8 +75,37 @@ const UserProfile = () => {
       });
     }
   };
+
+  const verificationSender = async () => {
+    try {
+      const res = await axios.post(
+        `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyD-vOPcurI7hmCvWd4tS1jCqd71PTwut_M`,
+        {
+          requestType: "VERIFY_EMAIL",
+          idToken: authCtx.token,
+        }
+      );
+      props.verifyModalOpenHandler();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed! Reload Again", {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "colored",
+      });
+    }
+  };
+
   return (
     <div className={styles.container}>
+      <div className={styles.verify}>
+        <button
+          onClick={verificationSender}
+          className={styles["verify-action"]}
+        >
+          Verify
+        </button>
+      </div>
       <ToastContainer />
       <h2 className={styles.title}>Update Profile</h2>
       <form className={styles.form} onSubmit={handleSubmit}>

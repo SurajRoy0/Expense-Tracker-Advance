@@ -1,8 +1,25 @@
 .container {
-  margin: 50px 200px;
   text-align: center;
 }
 
+.form {
+  margin: 50px 200px;
+}
+
+.verify {
+  display: flex;
+  justify-content: right;
+  padding-right: 100px;
+  padding-top: 30px;
+}
+.verify-action {
+  background-color: #1646e2;
+  border: none;
+  padding: 5px 20px;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
 .formGroup {
   text-align: start;
   margin-bottom: 20px;

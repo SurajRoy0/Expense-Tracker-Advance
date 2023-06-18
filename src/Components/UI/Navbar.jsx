@@ -4,6 +4,8 @@ import styles from "./Navbar.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import AuthContext from "../../Store/AuthContext";
+import { FaCheckCircle } from "react-icons/fa";
+
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -42,6 +44,33 @@ const Navbar = () => {
             Sign Out
           </li>
         )}
+        {authCtx.isLoggedIn &&
+          (authCtx.userName ? (
+            <li>
+              <NavLink
+                to="/user-profile"
+                className={({ isActive }) =>
+                  isActive ? styles.ActiveNav : styles.options
+                }
+              >
+                {authCtx.isVarified && (
+                  <FaCheckCircle size={24} color="green" />
+                )}{" "}
+                {authCtx.userName}
+              </NavLink>
+            </li>
+          ) : (
+            <li>
+              <NavLink
+                to="/user-profile"
+                className={({ isActive }) =>
+                  isActive ? styles.ActiveNav : styles.options
+                }
+              >
+                User
+              </NavLink>
+            </li>
+          ))}
       </ul>
     </div>
   );

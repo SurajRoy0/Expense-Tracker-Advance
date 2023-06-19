@@ -1,13 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./AddExpense.module.css";
-import axios from "axios";
 import ItemContext from "../../Store/ItemContext";
 
 const AddExpense = () => {
+  const itemCtx = useContext(ItemContext);
+
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
-  const itemCtx = useContext(ItemContext);
+  const [editItemId, setEditItemId] = useState(null);
+
+  useEffect(() => {
+    if (itemCtx.editData.id) {
+      setDescription(itemCtx.editData.description);
+      setAmount(itemCtx.editData.amount);
+      setCategory(itemCtx.editData.category);
+      setEditItemId(itemCtx.editData.id);
+    }
+  }, [itemCtx.editData]);
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -23,11 +33,15 @@ const AddExpense = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    itemCtx.addItems({
-      amount: amount,
-      description: description,
-      category: category,
-    });
+    itemCtx.addItems(
+      {
+        amount: amount,
+        description: description,
+        category: category,
+      },
+      editItemId
+    );
+    setEditItemId(null);
     setDescription("");
     setCategory("");
     setAmount("");

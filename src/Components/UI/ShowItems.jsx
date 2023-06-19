@@ -10,7 +10,7 @@ const ShowItems = () => {
       <h1 className={styles.title}>All Expenses</h1>
       <div className={styles.items}>
         {itemCtx.items.map((item) => {
-          return <Item key={item[0]} item={item[1]} />;
+          return <Item key={item[0]} item={item[1]} id={item[0]} />;
         })}
       </div>
     </div>

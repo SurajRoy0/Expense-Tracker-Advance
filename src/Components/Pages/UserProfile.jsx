@@ -4,13 +4,19 @@ import "react-toastify/dist/ReactToastify.css";
 
 import styles from "./UserProfile.module.css";
 import axios from "axios";
-import AuthContext from "../../Store/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../Store/Auth";
 
 const UserProfile = (props) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
 
-  const authCtx = useContext(AuthContext);
+  const token = useSelector((state) => state.auth.token);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+
+  const userEmail = useSelector((state) => state.auth.userEmail);
+  console.log(userEmail);
 
   const handleNameChange = (e) => setName(e.target.value);
   const handleImageChange = (e) => setImage(e.target.value);
@@ -20,7 +26,7 @@ const UserProfile = (props) => {
       const res = await axios.post(
         `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyD-vOPcurI7hmCvWd4tS1jCqd71PTwut_M`,
         {
-          idToken: authCtx.token,
+          idToken: token,
         }
       );
       // Access the response data from res.data
@@ -31,7 +37,7 @@ const UserProfile = (props) => {
       }
       setName(res.data.users[0].displayName);
       setImage(res.data.users[0].photoUrl);
-      authCtx.addUserName(res.data.users[0].displayName);
+      dispatch(authActions.addUserName(res.data.users[0].displayName));
     } catch (error) {
       console.error(error);
       toast.error("Failed! Reload Again", {
@@ -43,7 +49,7 @@ const UserProfile = (props) => {
   };
 
   useEffect(() => {
-    authCtx.isLoggedIn && getDataHandler();
+    isLoggedIn && getDataHandler();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -52,7 +58,7 @@ const UserProfile = (props) => {
       const res = await axios.post(
         `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyD-vOPcurI7hmCvWd4tS1jCqd71PTwut_M`,
         {
-          idToken: authCtx.token,
+          idToken: token,
           displayName: name,
           photoUrl: image,
           returnSecureToken: true,
@@ -82,7 +88,7 @@ const UserProfile = (props) => {
         `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyD-vOPcurI7hmCvWd4tS1jCqd71PTwut_M`,
         {
           requestType: "VERIFY_EMAIL",
-          idToken: authCtx.token,
+          idToken: token,
         }
       );
       props.verifyModalOpenHandler();

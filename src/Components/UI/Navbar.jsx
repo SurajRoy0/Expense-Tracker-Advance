@@ -1,33 +1,40 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import styles from "./Navbar.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
-
-import AuthContext from "../../Store/AuthContext";
 import { FaCheckCircle } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../Store/Auth";
 
 const Navbar = () => {
-  const authCtx = useContext(AuthContext);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userName = useSelector((state) => state.auth.userName);
+
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const signOutHandler = () => {
-    authCtx.logOut();
+    dispatch(authActions.logOut());
     navigate("/sign-in");
   };
   return (
     <div className={styles.container}>
       <h1>Expense Tracker</h1>
       <ul className={styles.nav}>
-        <li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? styles.ActiveNav : styles.options
-            }
-            to="/"
-          >
-            Home
-          </NavLink>
-        </li>
-        {!authCtx.isLoggedIn && (
+        {isLoggedIn && (
+          <li>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? styles.ActiveNav : styles.options
+              }
+              to="/"
+            >
+              Home
+            </NavLink>
+          </li>
+        )}
+        {!isLoggedIn && (
           <li>
             <NavLink
               to="/sign-in"
@@ -39,13 +46,13 @@ const Navbar = () => {
             </NavLink>
           </li>
         )}
-        {authCtx.isLoggedIn && (
+        {isLoggedIn && (
           <li onClick={signOutHandler} className={styles.options}>
             Sign Out
           </li>
         )}
-        {authCtx.isLoggedIn &&
-          (authCtx.userName ? (
+        {isLoggedIn &&
+          (userName ? (
             <li>
               <NavLink
                 to="/user-profile"
@@ -53,10 +60,7 @@ const Navbar = () => {
                   isActive ? styles.ActiveNav : styles.options
                 }
               >
-                {authCtx.isVarified && (
-                  <FaCheckCircle size={24} color="green" />
-                )}{" "}
-                {authCtx.userName}
+                {false && <FaCheckCircle size={24} color="green" />} {userName}
               </NavLink>
             </li>
           ) : (

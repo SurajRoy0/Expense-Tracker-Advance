@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import styles from "./SignIn.module.css";
 import axios from "axios";
-import AuthContext from "../../Store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../UI/Loader";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../Store/Auth";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ const SignIn = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [loader, setLoader] = useState(false);
 
-  const authCtx = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const goToSignUpHandler = () => {
@@ -44,8 +45,13 @@ const SignIn = () => {
           returnSecureToken: true,
         }
       );
-      authCtx.isLogin(res.data.idToken);
-      authCtx.addUserEmail(res.data.email);
+      dispatch(
+        authActions.isLogin({
+          token: res.data.idToken,
+          userEmail: res.data.email,
+          userName: res.data.displayName ? res.data.displayName : "Profile",
+        })
+      );
       setLoader(false);
       toast.success("Login Successfull", {
         position: "top-center",

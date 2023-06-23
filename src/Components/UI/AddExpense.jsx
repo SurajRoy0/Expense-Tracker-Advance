@@ -1,23 +1,28 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./AddExpense.module.css";
-import ItemContext from "../../Store/ItemContext";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem, fetchItems } from "../../Api/api";
 
 const AddExpense = () => {
-  const itemCtx = useContext(ItemContext);
+  const authData = useSelector((state) => state.auth);
+  const itemsData = useSelector((state) => state.items);
 
+  const modifiedEmail = authData.userEmail.replace(/[.@]/g, "-");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [editItemId, setEditItemId] = useState(null);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if (itemCtx.editData.id) {
-      setDescription(itemCtx.editData.description);
-      setAmount(itemCtx.editData.amount);
-      setCategory(itemCtx.editData.category);
-      setEditItemId(itemCtx.editData.id);
+    if (itemsData.editData.id) {
+      setDescription(itemsData.editData.description);
+      setAmount(itemsData.editData.amount);
+      setCategory(itemsData.editData.category);
+      setEditItemId(itemsData.editData.id);
     }
-  }, [itemCtx.editData]);
+  }, [itemsData.editData]);
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -33,14 +38,17 @@ const AddExpense = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    itemCtx.addItems(
-      {
-        amount: amount,
+    const res = await addItem({
+      item: {
         description: description,
         category: category,
+        amount: amount,
       },
-      editItemId
-    );
+      email: modifiedEmail,
+      id: editItemId,
+    });
+    dispatch(fetchItems(modifiedEmail));
+    console.log(res);
     setEditItemId(null);
     setDescription("");
     setCategory("");

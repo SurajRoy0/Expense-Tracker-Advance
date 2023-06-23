@@ -5,12 +5,12 @@ import Navbar from './Components/UI/Navbar';
 import Home from './Components/Pages/Home';
 import SignIn from './Components/Pages/SignIn';
 import UserProfile from './Components/Pages/UserProfile';
-import { useContext, useState } from 'react';
-import AuthContext from './Store/AuthContext';
+import { useState } from 'react';
 import Verify from './Components/UI/Verify';
+import { useSelector } from 'react-redux';
 
 function App() {
-  const authCtx = useContext(AuthContext)
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
   const [VerifyModal, setVerifyModal] = useState(false)
 
   const verifyModalOpenHandler = () => {
@@ -20,15 +20,17 @@ function App() {
   const verifyModalCloseHandler = () => {
     setVerifyModal(false);
   }
+
+
   return (
     <>
       {VerifyModal && <Verify verifyModalCloseHandler={verifyModalCloseHandler} />}
       <Navbar />
       <Routes>
-        <Route path='/' element={<Home />} />
+        {isLoggedIn && <Route path='/' element={<Home />} />}
         <Route path='/sign-in' element={<SignIn />} />
-        <Route path='/sign-up' element={<SignUp />} />
-        {authCtx.isLoggedIn && <Route path='/user-profile' element={<UserProfile verifyModalOpenHandler={verifyModalOpenHandler} />} />}
+        {!isLoggedIn && <Route path='/sign-up' element={<SignUp />} />}
+        {isLoggedIn && <Route path='/user-profile' element={<UserProfile verifyModalOpenHandler={verifyModalOpenHandler} />} />}
       </Routes>
     </>
   );

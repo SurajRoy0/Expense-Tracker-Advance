@@ -1,4 +1,5 @@
-import styles from "./Item.module.css";
+import normal from "./Item.module.css";
+import dark from "./ItemDark.module.css";
 import Button from "./Button";
 import { itemActions } from "../../Store/Items";
 import { deleteItem, fetchItems } from "../../Api/api";
@@ -6,7 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 const Item = (props) => {
   const authData = useSelector((state) => state.auth);
   const modifiedEmail = authData.userEmail.replace(/[.@]/g, "-");
+  console.log(modifiedEmail);
   const dispatch = useDispatch();
+
+  const isDark = useSelector((state) => state.theme.isDarkTheme);
+  const styles = isDark ? dark : normal;
 
   const editItemHandler = () => {
     dispatch(
@@ -20,8 +25,12 @@ const Item = (props) => {
   };
 
   const deleteItemHandler = () => {
-    deleteItem(props.id, modifiedEmail);
-    dispatch(fetchItems(modifiedEmail));
+    dispatch(
+      deleteItem({
+        id: props.id,
+        email: modifiedEmail,
+      })
+    );
   };
 
   return (

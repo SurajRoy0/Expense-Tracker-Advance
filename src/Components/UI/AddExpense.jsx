@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import styles from "./AddExpense.module.css";
+import normal from "./AddExpense.module.css";
+import dark from "./AddExpenseDark.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, fetchItems } from "../../Api/api";
 
 const AddExpense = () => {
   const authData = useSelector((state) => state.auth);
   const itemsData = useSelector((state) => state.items);
+
+  const isDark = useSelector((state) => state.theme.isDarkTheme);
+  const styles = isDark ? dark : normal;
 
   const modifiedEmail = authData.userEmail.replace(/[.@]/g, "-");
   const [description, setDescription] = useState("");
@@ -38,17 +42,17 @@ const AddExpense = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await addItem({
-      item: {
-        description: description,
-        category: category,
-        amount: amount,
-      },
-      email: modifiedEmail,
-      id: editItemId,
-    });
-    dispatch(fetchItems(modifiedEmail));
-    console.log(res);
+    dispatch(
+      addItem({
+        item: {
+          description: description,
+          category: category,
+          amount: amount,
+        },
+        email: modifiedEmail,
+        id: editItemId,
+      })
+    );
     setEditItemId(null);
     setDescription("");
     setCategory("");

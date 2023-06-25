@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isDarkTheme: false
+    isDarkTheme: false,
+    isPremium: false
 }
 
 const themeSlice = createSlice({
@@ -10,10 +11,13 @@ const themeSlice = createSlice({
     reducers: {
         themeChanger(state) {
             state.isDarkTheme = !state.isDarkTheme;
+        },
+        isPremiumHandler(state, action) {
+            state.isPremium = action.payload;
         }
     }
 })
 
-export const { themeChanger } = themeSlice.actions;
+export const { themeChanger, isPremiumHandler } = themeSlice.actions;
 
 export default themeSlice.reducer;

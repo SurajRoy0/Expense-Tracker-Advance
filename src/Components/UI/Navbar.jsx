@@ -5,10 +5,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../Store/Auth";
+import { themeChanger } from "../../Store/themeChange";
 
 const Navbar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userName = useSelector((state) => state.auth.userName);
+  const totalExpense = useSelector((state) => state.theme.isPremium);
 
   const dispatch = useDispatch();
 
@@ -18,6 +20,8 @@ const Navbar = () => {
     dispatch(authActions.logOut());
     navigate("/sign-in");
   };
+
+  const changeThemeHandler = () => [dispatch(themeChanger())];
   return (
     <div className={styles.container}>
       <h1>Expense Tracker</h1>
@@ -75,6 +79,11 @@ const Navbar = () => {
               </NavLink>
             </li>
           ))}
+        {totalExpense && (
+          <li onClick={changeThemeHandler} className={styles.options}>
+            Premium
+          </li>
+        )}
       </ul>
     </div>
   );

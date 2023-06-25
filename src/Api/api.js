@@ -11,36 +11,35 @@ export const fetchItems = createAsyncThunk('fetchItems', async (modifiedEmail) =
     }
 });
 
-export const addItem = async ({ item, email, id }) => {
+export const addItem = createAsyncThunk('addItem', async ({ item, email, id }) => {
     try {
         if (!id) {
             const res = await axios.post(
                 `https://expense-tracker-b7fdf-default-rtdb.firebaseio.com/expense-tracker/${email}.json`,
                 item
             );
-            console.log(res.data)
+            console.log(res.data.name)
+            return [res.data.name, item]
 
-            return res.data;
         } else {
             const res = await axios.put(
                 `https://expense-tracker-b7fdf-default-rtdb.firebaseio.com/expense-tracker/${email}/${id}.json`,
                 item
             );
-            return res.data;
+            return [id, res.data]
         }
     } catch (error) {
         console.log(error);
         throw new Error('Failed to add item');
     }
-};
+});
 
-export const deleteItem = async (itemId, email) => {
-    console.log(itemId)
+export const deleteItem = createAsyncThunk('deleteItem', async ({ id, email }) => {
+    console.log(email)
     try {
-        await axios.delete(`https://expense-tracker-b7fdf-default-rtdb.firebaseio.com/expense-tracker/${email}/${itemId}.json`);
-        return itemId;
+        await axios.delete(`https://expense-tracker-b7fdf-default-rtdb.firebaseio.com/expense-tracker/${email}/${id}.json`);
+        return id;
     } catch (error) {
-        console.log(error);
-        throw new Error('Failed to delete item');
+        return error
     }
-};
+});

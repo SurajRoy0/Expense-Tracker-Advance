@@ -37,7 +37,6 @@ const UserProfile = (props) => {
       }
       setName(res.data.users[0].displayName);
       setImage(res.data.users[0].photoUrl);
-      dispatch(authActions.addUserName(res.data.users[0].displayName));
     } catch (error) {
       console.error(error);
       toast.error("Failed! Reload Again", {

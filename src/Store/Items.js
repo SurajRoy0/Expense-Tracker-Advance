@@ -41,7 +41,7 @@ const itemsSlice = createSlice({
         })
 
         builder.addCase(deleteItem.fulfilled, (state, action) => {
-            state.items = state.items.filter(item => item[0] != action.payload)
+            state.items = state.items.filter(item => item[0] !== action.payload)
         })
     }
 });
